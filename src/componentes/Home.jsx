@@ -1,7 +1,14 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Home.css'; // Asegúrate de que la ruta del archivo CSS sea correcta
 
 const Home = () => {
+  const navigate = useNavigate(); // Inicializa useNavigate
+
+  const handleGenerateInvoice = () => {
+    navigate('/invoice'); // Redirige a la página de la factura
+  };
+
   return (
     <div className="home-container">
       {/* Primera sección - Texto de bienvenida */}
@@ -26,7 +33,7 @@ const Home = () => {
 
       {/* Tercera sección - Historial de Facturas */}
       <section className="history-section">
-        <button className="generate-btn">Generar factura</button>
+      <button className="generate-btn" onClick={handleGenerateInvoice}>Generar factura</button>
         <button className="history-btn">Ver facturas</button>
       </section>
     </div>

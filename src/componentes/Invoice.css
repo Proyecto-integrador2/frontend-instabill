@@ -1,0 +1,78 @@
+/* Invoice.css */
+
+.invoice-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    color: #333;
+    background-color: white; 
+}
+
+.invoice-title {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.invoice-info {
+    width: 100%;
+    margin-bottom: 20px; 
+}
+
+.info-input {
+    width: 100%;
+    height: 40px;
+    padding: 10px;
+    margin-bottom: 15px; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    color: #333; 
+    background-color: #f9f9f9; 
+}
+
+.invoice-table {
+    width: 100%;
+    border-collapse: collapse; 
+    margin-bottom: 20px;
+}
+
+.invoice-table th, .invoice-table td {
+    border: 1px solid #ccc; 
+    padding: 10px;
+    text-align: left;
+}
+
+.invoice-table th {
+    background-color: #007BFF;
+    color: white; 
+}
+
+.total-section {
+    margin: 20px 0;
+}
+
+.additional-info {
+    width: 100%;
+    height: 100px; 
+    padding: 10px;
+    margin-bottom: 20px; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    color: #333; 
+    background-color: #f9f9f9; 
+}
+
+.generate-invoice-btn {
+    width: 200px; 
+    height: 40px; 
+    font-size: 1rem;
+    background-color: #007BFF; 
+    color: white;
+    border: none;
+    border-radius: 5px; 
+    cursor: pointer;
+}
+
+.generate-invoice-btn:hover {
+    background-color: #0056b3; 
+}
