@@ -1,0 +1,153 @@
+/* Home.css */
+
+body {
+    background-color: white;
+    margin: 0;
+    padding: 0;
+}
+  
+.home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    color: #333; 
+}
+  
+/* Sección de bienvenida */
+.welcome-section {
+    text-align: center;
+    margin-bottom: 50px;
+}
+  
+.welcome-text {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+  
+.question-text {
+    font-size: 1.5rem;
+    color: #555; 
+}
+  
+/* Sección de nueva factura */
+.invoice-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+}
+  
+/* Campo de texto */
+.input-field {
+    width: 400px; 
+    height: 80px; 
+    padding: 10px;
+    font-size: 1rem; 
+    margin-right: 20px; 
+    background-color: white;
+    color: #333;
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+}
+  
+/* Contenedor de botones */
+.buttons-container {
+    display: flex;
+    flex-direction: column;
+}
+  
+.record-btn, .upload-btn {
+    width: 180px;
+    height: 40px;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    background-color: #007BFF; 
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+  
+.record-btn:hover, .upload-btn:hover {
+    background-color: #0056b3; 
+    
+}
+  
+/* Sección de historial de facturas */
+
+/* Nuevo botón para generar factura */
+.generate-btn {
+    width: 290px; 
+    height: 50px; 
+    font-size: 1rem; 
+    margin-right: 20px; 
+    background-color: #007BFF; 
+    color: white;
+    border: none;
+    cursor: pointer; 
+}
+
+.generate-btn:hover {
+    background-color: #0056b3; 
+}
+.history-section {
+    margin-top: 10px;
+    text-align: center;
+    display: flex; 
+    flex-direction: row;
+    justify-content: center; /
+}
+  
+/* Botón de ver facturas */
+.history-btn {
+    width: 290px; 
+    height: 50px;
+    font-size: 1rem;
+    background-color: #007BFF; 
+    color: white; 
+    border: none;
+    cursor: pointer;
+}
+  
+.history-btn:hover {
+    background-color: #0056b3; 
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .welcome-text {
+        font-size: 2rem; 
+    }
+  
+    .question-text {
+        font-size: 1.2rem; 
+    }
+    .invoice-section {
+        flex-direction: column;
+        align-items: center; 
+    }
+  
+    .input-field {
+        width: 180%; 
+        height: 90px;
+        margin-right: 0;
+        margin-bottom: 20px; 
+    }
+  
+    .buttons-container {
+        align-items: center; 
+    }
+  
+    .record-btn, .upload-btn {
+        width: 100%; 
+        height: 50px; 
+    }
+  
+    .history-btn {
+        width: 100%; 
+    }
+    .generate-btn {
+        width: 100%; 
+        height: 50px;
+    }
+}
