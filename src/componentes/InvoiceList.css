@@ -1,0 +1,36 @@
+/* InvoiceList.css */
+
+.invoice-list-container {
+    padding: 20px;
+    background-color: white;
+    color: #333; /* Texto oscuro */
+}
+
+.invoice-list-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.invoice-list-table th, .invoice-list-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+.invoice-list-table th {
+    background-color: #007BFF;
+    color: white;
+}
+
+.invoice-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

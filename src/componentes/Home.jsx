@@ -9,6 +9,11 @@ const Home = () => {
     navigate('/invoice'); // Redirige a la página de la factura
   };
 
+  const handleInvoiceList = () => {
+    navigate('/invoiceList'); // Redirige a la página de la factura
+  };
+  
+
   return (
     <div className="home-container">
       {/* Primera sección - Texto de bienvenida */}
@@ -34,7 +39,7 @@ const Home = () => {
       {/* Tercera sección - Historial de Facturas */}
       <section className="history-section">
       <button className="generate-btn" onClick={handleGenerateInvoice}>Generar factura</button>
-        <button className="history-btn">Ver facturas</button>
+        <button className="history-btn" onClick={handleInvoiceList}>Ver facturas</button>
       </section>
     </div>
   );
