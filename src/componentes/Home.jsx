@@ -6,10 +6,11 @@ import getDataInvoice from '../utils/apiGPT.js'
 
 const Home = () => {
   const navigate = useNavigate(); // Inicializa useNavigate
-  const [transcription, setTranscription] = useState('');
+  const [transcription, setTranscription] = useState('El cliente Andres López que vive en la dirección calle 5 #6-18, número de celular 3205007858 compra 3 lapiceros marca kilometrico a 2500 por unidad, también lleva 5 cuadernos marca norma cuadriculados a 8700 cada unidad, también un maletin que cuesta 50000, también lleva una regla a 1000, un kit de colores marca condor a 19000 y finalmente lleva 3 marcadores marca sharpie con un precio de 3000 por unidad.');
   const [isRecording, setIsRecording] = useState(false);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
+  const [invoiceStructure, setInvoiceStructure ] = useState();
 
   const handleInvoiceList = () => {
     navigate('/invoiceList'); // Redirige a la página de la factura
@@ -62,6 +63,7 @@ const Home = () => {
     const file = event.target.files[0];
     const formData = new FormData();
     formData.append('audio', file);
+    console.log(formData)
 
     try {
       const response = await axios.post('http://127.0.0.1:8000/speech-to-text/', formData, {
@@ -84,9 +86,10 @@ const Home = () => {
   const handleGenerateRequestGPT = async () => {
     if (transcription.length > 5) {
       console.log("input GPT: ", transcription)
-      const billData = await getDataInvoice(transcription);
-      console.log("output GPT: ", billData)
-      navigate('/invoice');
+      const invoiceData = await getDataInvoice(transcription);
+      setInvoiceStructure(invoiceData)
+      
+      navigate('/invoice', {state: {invoiceData}});
     } else {
       alert('La transcripción está vacía. Por favor, inicia o sube una grabación.');
     }
