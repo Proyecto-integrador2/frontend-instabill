@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Home.css'; // Asegúrate de que la ruta del archivo CSS sea correcta
+import getDataInvoice from '../utils/apiGPT.js'
 
 const Home = () => {
   const navigate = useNavigate(); // Inicializa useNavigate
@@ -9,10 +10,6 @@ const Home = () => {
   const [isRecording, setIsRecording] = useState(false);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
-
-  const handleGenerateInvoice = () => {
-    navigate('/invoice'); // Redirige a la página de la factura
-  };
 
   const handleInvoiceList = () => {
     navigate('/invoiceList'); // Redirige a la página de la factura
@@ -80,6 +77,21 @@ const Home = () => {
     }
   };
 
+  /**
+   * Maneja la generación de la estructura de la factura invocando la función
+   * que hace consultas a la api de OpenAI partiendo del texto de la transcripción
+   */
+  const handleGenerateRequestGPT = async () => {
+    if (transcription.length > 5) {
+      console.log("input GPT: ", transcription)
+      const billData = await getDataInvoice(transcription);
+      console.log("output GPT: ", billData)
+      navigate('/invoice');
+    } else {
+      alert('La transcripción está vacía. Por favor, inicia o sube una grabación.');
+    }
+  }
+
   return (
     <div className="home-container">
       {/* Primera sección - Texto de bienvenida */}
@@ -87,7 +99,6 @@ const Home = () => {
         <h1 className="welcome-text">Bienvenido a Instabill</h1>
         <p className="question-text">¿Qué deseas hacer?</p>
       </section>
-
       {/* Segunda sección - Nueva Factura */}
       <section className="invoice-section">
         <input 
@@ -95,7 +106,7 @@ const Home = () => {
           placeholder="Aquí aparecerá la transcripción del audio..." 
           className="input-field" 
           value={transcription} // Muestra la transcripción
-          disabled 
+          disabled
         />
         <div className="buttons-container">
           <button 
@@ -120,7 +131,7 @@ const Home = () => {
 
       {/* Tercera sección - Historial de Facturas */}
       <section className="history-section">
-        <button className="generate-btn" onClick={handleGenerateInvoice}>Generar factura</button>
+        <button className="generate-btn" onClick={handleGenerateRequestGPT}>Generar factura</button>
         <button className="history-btn" onClick={handleInvoiceList}>Ver facturas</button>
       </section>
     </div>
