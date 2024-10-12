@@ -88,8 +88,10 @@ const Home = () => {
       console.log("input GPT: ", transcription)
       const invoiceData = await getDataInvoice(transcription);
       setInvoiceStructure(invoiceData)
+
+      const date = new Date().toLocaleString('es-CO')
       
-      navigate('/invoice', {state: {invoiceData}});
+      navigate('/invoice', {state: {invoiceData, date: date}});
     } else {
       alert('La transcripción está vacía. Por favor, inicia o sube una grabación.');
     }
