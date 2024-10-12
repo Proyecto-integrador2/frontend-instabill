@@ -36,6 +36,20 @@
     margin-bottom: 20px;
 }
 
+.invoice-table th:nth-child(1),
+.invoice-table td:nth-child(1) {
+    width: 45%; 
+}
+
+.invoice-table th:nth-child(2),
+.invoice-table td:nth-child(2),
+.invoice-table th:nth-child(3),
+.invoice-table td:nth-child(3),
+.invoice-table th:nth-child(4),
+.invoice-table td:nth-child(4) {
+    width: 15%;
+}
+
 .invoice-table th, .invoice-table td {
     border: 1px solid #ccc; 
     padding: 10px;
@@ -75,4 +89,31 @@
 
 .generate-invoice-btn:hover {
     background-color: #0056b3; 
+}
+
+.invoice-container input[type="text"],
+.invoice-container input[type="number"],
+.invoice-container input[type="date"] {
+    width: 100%;
+    padding: 8px;
+    margin: 4px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f5ecec; 
+    color: #333; 
+    font-size: 16px;
+}
+
+.invoice-container input[type="text"]::placeholder,
+.invoice-container input[type="number"]::placeholder,
+.invoice-container input[type="date"]::placeholder {
+    color: #aaa; 
+}
+
+.invoice-container input[type="text"]:focus,
+.invoice-container input[type="number"]:focus,
+.invoice-container input[type="date"]:focus {
+    outline: none;
+    border-color: #007bff; 
 }
