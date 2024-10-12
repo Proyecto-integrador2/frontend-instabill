@@ -23,7 +23,7 @@ async function getDataInvoice(dataInvoice){
         messages: [
             {
             role: "system",
-            content: "Eres un asistente que convierte descripciones de compras en JSON con comillas dobles. Campos: nombre, direccion y contacto del cliente, la fecha_facturacion (fecha y hora actual, horario UTC-5). Campos: nombre, cantidad, precio_unitario y precio_total de cada producto. Finalmente, calcula el total_compra"
+            content: "Eres un asistente que convierte descripciones de compras en JSON con comillas dobles. Estructura: {cliente: {nombre:, direccion:, contacto:}, productos: [{nombre:, cantidad:, precio_unitario:, precio_total:}, ]}."
             },
             {
             role: "user",

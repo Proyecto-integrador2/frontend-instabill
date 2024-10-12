@@ -6,15 +6,19 @@ const Invoice = () => {
   const location = useLocation();
   // se obtienen los datos de la factura
   const data = location.state?.invoiceData;
+  const date = location.state?.date;
 
   // se formatea a json el string con el json de la factura
   const invoiceData = JSON.parse(data)
-  const [editInvoice, setEditInvoice] = useState(invoiceData);
-  console.log(editInvoice)
+  const [editInvoice, setEditInvoice] = useState({
+    ...invoiceData,
+    total_compra: invoiceData.productos.reduce((sum, product) => sum + product.precio_total, 0),
+    fecha_facturacion: date
+  });
 
   // revisar si invoiceData está definida para usar la información
   if (!data) {
-    return <p>No hay datos de la factura disponibles.</p>;
+      return <p>No hay datos de la factura disponibles.</p>;
   }
 
   // permite manejar los cambios hechos en la factura
@@ -69,7 +73,7 @@ const Invoice = () => {
                   onChange={(e) => handleClientChange('celular', e.target.value)} 
               />
           </p>
-          <p> <strong>Fecha de Facturación:</strong> {new Date(editInvoice.fecha_facturacion).toLocaleDateString()} </p>
+          <p> <strong>Fecha:</strong> {editInvoice.fecha_facturacion} </p>
       </div>
       
       <table className="invoice-table">
