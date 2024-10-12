@@ -10,6 +10,8 @@ const Invoice = () => {
   // se formatea a json el string con el json de la factura
   const invoiceData = JSON.parse(data)
   const [editInvoice, setEditInvoice] = useState(invoiceData);
+  console.log(editInvoice)
+
   // revisar si invoiceData está definida para usar la información
   if (!data) {
     return <p>No hay datos de la factura disponibles.</p>;
@@ -19,12 +21,12 @@ const Invoice = () => {
   const handleProductChange = (index, field, value) => {
     const updatedProducts = [...editInvoice.productos];
     updatedProducts[index][field] = field === 'precio_unitario' || field === 'cantidad' ? parseFloat(value) : value;
-    updatedProducts[index].total = updatedProducts[index].cantidad * updatedProducts[index].precio_unitario;
+    updatedProducts[index].precio_total = updatedProducts[index].cantidad * updatedProducts[index].precio_unitario;
 
     setEditInvoice({
         ...editInvoice,
         productos: updatedProducts,
-        total_compra: updatedProducts.reduce((sum, product) => sum + product.total, 0),
+        total_compra: updatedProducts.reduce((sum, product) => sum + product.precio_total, 0),
     });
   };
 
@@ -80,19 +82,19 @@ const Invoice = () => {
               </tr>
           </thead>
           <tbody>
-              {editInvoice.productos.map((producto, index) => (
+              {editInvoice.productos.map((product, index) => (
                   <tr key={index}>
                       <td>
                           <input 
                               type="text" 
-                              value={producto.nombre}
+                              value={product.nombre}
                               onChange={(e) => handleProductChange(index, 'nombre', e.target.value)} 
                           />
                       </td>
                       <td>
                           <input 
                               type="number" 
-                              value={producto.cantidad} 
+                              value={product.cantidad} 
                               onChange={(e) => handleProductChange(index, 'cantidad', e.target.value)} 
                               min="1"
                           />
@@ -100,12 +102,12 @@ const Invoice = () => {
                       <td>
                           <input 
                               type="number" 
-                              value={producto.precio_unitario} 
+                              value={product.precio_unitario} 
                               onChange={(e) => handleProductChange(index, 'precio_unitario', e.target.value)} 
                               step="0.01"
                           />
                       </td>
-                      <td>${producto.precio_total}</td>
+                      <td>${product.precio_total}</td>
                   </tr>
               ))}
           </tbody>
