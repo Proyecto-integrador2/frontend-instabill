@@ -98,7 +98,7 @@ const Invoice = () => {
     <div className="invoice-container">
       <h1 className="invoice-title">Factura InstaBill</h1>
       <div className="customer-info">
-        <p>
+        <p className="customer-name">
           <strong>Nombre Cliente:</strong>
           <input
             type="text"
@@ -107,7 +107,7 @@ const Invoice = () => {
             style={{ marginLeft: "5px" }}
           />
         </p>
-        <p>
+        <p className="customer-address">
           <strong>Dirección:</strong>
           <input
             type="text"
@@ -115,7 +115,7 @@ const Invoice = () => {
             onChange={(e) => handleClientChange("direccion", e.target.value)}
           />
         </p>
-        <p>
+        <p className="customer-contact">
           <strong>Contacto:</strong>
           <input
             type="text"
@@ -123,10 +123,9 @@ const Invoice = () => {
             onChange={(e) => handleClientChange("contacto", e.target.value)}
           />
         </p>
-        <p>
+        <p className="invoice-date">
           {" "}
-          <strong className="invoice-date">Fecha:</strong>{" "}
-          {editInvoice.fecha_facturacion}{" "}
+          <strong>Fecha:</strong> {editInvoice.fecha_facturacion}{" "}
         </p>
       </div>
 
@@ -191,15 +190,17 @@ const Invoice = () => {
       ></textarea>
 
       {/* Botones */}
-      <button className="download-btn" onClick={generatePDF}>
-        Descargar PDF
-      </button>
-      <button
-        className="save-btn"
-        onClick={() => console.log("Guardar factura en la base de datos")}
-      >
-        Guardar Factura
-      </button>
+      <div className="container-btn">
+        <button className="download-btn" onClick={generatePDF}>
+          Descargar PDF
+        </button>
+        <button
+          className="save-btn"
+          onClick={() => console.log("Guardar factura en la base de datos")}
+        >
+          Guardar Factura
+        </button>
+      </div>
     </div>
   );
 };
