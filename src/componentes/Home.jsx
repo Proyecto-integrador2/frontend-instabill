@@ -29,50 +29,57 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
 
+  /** Redirige a la página de la lista de facturas. 
+   * */
   const handleInvoiceList = () => {
-    navigate("/invoiceList"); // Redirige a la página de la factura
+    navigate("/invoiceList");
   };
 
+  /** Inicia la grabación de audio y envía el archivo grabado a un endpoint de la API para convertirlo a texto.
+   * */
   const startRecording = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    mediaRecorderRef.current = new MediaRecorder(stream);
-    mediaRecorderRef.current.start();
-    audioChunksRef.current = [];
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorderRef.current = new MediaRecorder(stream);
+      mediaRecorderRef.current.start();
+      audioChunksRef.current = [];
+  
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        audioChunksRef.current.push(event.data);
+      };
+  
+      mediaRecorderRef.current.onstop = async () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
+        const formData = new FormData();
+        formData.append("audio", audioBlob);
+  
+        try {
+          setIsLoading(true);
+          const response = await axios.post(
+            "http://127.0.0.1:8000/speech-to-text/",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+          setTranscription(response.data.transcription);
+        } catch (error) {
+          console.error("Error al enviar el audio:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+  
+      setIsRecording(true);
+    } catch (error) {
+      console.error("Error al acceder al micrófono:", error);
+    }
+  };  
 
-    mediaRecorderRef.current.ondataavailable = (event) => {
-      audioChunksRef.current.push(event.data);
-    };
-
-    mediaRecorderRef.current.onstop = async () => {
-      const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
-      const formData = new FormData();
-      formData.append("audio", audioBlob);
-      try {
-        setIsLoading(true);
-        const response = await axios.post(
-          "http://127.0.0.1:8000/speech-to-text/",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        console.log(response.data.transcription);
-        console.log(response);
-        setTranscription(response.data.transcription);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error al enviar el audio:", error);
-        console.log(isLoading);
-        setIsLoading(false);
-      }
-    };
-
-    console.log(isLoading);
-    setIsRecording(true);
-  };
-
+  /** Detiene la grabación de audio y envía el archivo grabado a un endpoint de la API para convertirlo a texto.
+   * */
   const stopRecording = () => {
     mediaRecorderRef.current.stop();
     console.log(isLoading);
@@ -81,10 +88,16 @@ const Home = () => {
 
   const fileInputRef = useRef(null);
 
+  /** Simula un clic en el input de archivo, permitiendo al usuario seleccionar un archivo de audio desde su dispositivo.
+   * */
   const handleAudioUpload = () => {
     fileInputRef.current.click();
   };
 
+  /** Maneja el evento de carga de un archivo de audio seleccionado por el usuario.
+   * Envía el archivo a un endpoint de la API para convertirlo a texto.
+   * Actualiza el estado transcription con la respuesta del servidor.
+   */
   const uploadAudio = async (event) => {
     const file = event.target.files[0];
     const formData = new FormData();
