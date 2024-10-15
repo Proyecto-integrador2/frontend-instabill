@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Home.css'; // Asegúrate de que la ruta del archivo CSS sea correcta
 import getDataInvoice from '../utils/apiGPT.js'
+import Swal from 'sweetalert2';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 const Home = () => {
   const navigate = useNavigate(); // Inicializa useNavigate
@@ -11,6 +14,8 @@ const Home = () => {
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const [invoiceStructure, setInvoiceStructure ] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingAudio, setIsLoadingAudio] = useState(false);
 
   const handleInvoiceList = () => {
     navigate('/invoiceList'); // Redirige a la página de la factura
@@ -32,6 +37,7 @@ const Home = () => {
       formData.append('audio', audioBlob);
 
       try {
+        setIsLoading(true);
         const response = await axios.post('http://127.0.0.1:8000/speech-to-text/', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -39,17 +45,22 @@ const Home = () => {
         });
         console.log(response.data.transcription);
         console.log(response);
-        setTranscription(response.data.transcription); // Asegúrate de que el backend envíe la transcripción en este formato
+        setTranscription(response.data.transcription); 
+        setIsLoading(false);
       } catch (error) {
         console.error('Error al enviar el audio:', error);
+        console.log(isLoading);
+        setIsLoading(false);
       }
     };
 
+    console.log(isLoading);
     setIsRecording(true);
   };
 
   const stopRecording = () => {
     mediaRecorderRef.current.stop();
+    console.log(isLoading);
     setIsRecording(false);
   };
 
@@ -66,6 +77,7 @@ const Home = () => {
     console.log(formData)
 
     try {
+      setIsLoadingAudio(true);
       const response = await axios.post('http://127.0.0.1:8000/speech-to-text/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -73,9 +85,11 @@ const Home = () => {
       });
       console.log(response.data.transcription);
       console.log(response);
-      setTranscription(response.data.transcription); // Asegúrate de que el backend envíe la transcripción en este formato
+      setTranscription(response.data.transcription);
+      setIsLoadingAudio(false);
     } catch (error) {
       console.error('Error al subir el archivo de audio:', error);
+      setIsLoadingAudio(false);
     }
   };
 
@@ -85,15 +99,31 @@ const Home = () => {
    */
   const handleGenerateRequestGPT = async () => {
     if (transcription.length > 5) {
-      console.log("input GPT: ", transcription)
-      const invoiceData = await getDataInvoice(transcription);
-      setInvoiceStructure(invoiceData)
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: '¿Estás satisfecho con la transcripción antes de generar la factura?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, generar factura',
+        cancelButtonText: 'No, revisar de nuevo',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          // Si el usuario confirma, generar la factura
+          console.log("input GPT: ", transcription);
+          const invoiceData = await getDataInvoice(transcription);
+          setInvoiceStructure(invoiceData);
 
-      const date = new Date().toLocaleString('es-CO')
-      
-      navigate('/invoice', {state: {invoiceData, date: date}});
+          const date = new Date().toLocaleString('es-CO');
+          navigate('/invoice', { state: { invoiceData, date: date } });
+
+          Swal.fire('Factura Generada', 'Tu factura ha sido creada correctamente.', 'success');
+        } else {
+          // Si el usuario decide no proceder
+          Swal.fire('Revisión', 'Puedes revisar o editar la transcripción antes de generar la factura.', 'info');
+        }
+      });
     } else {
-      alert('La transcripción está vacía. Por favor, inicia o sube una grabación.');
+      Swal.fire('Error', 'La transcripción está vacía. Por favor, inicia o sube una grabación.', 'error');
     }
   }
 
@@ -111,17 +141,23 @@ const Home = () => {
           placeholder="Aquí aparecerá la transcripción del audio..." 
           className="input-field" 
           value={transcription} // Muestra la transcripción
-          disabled
+          onChange={(e) => setTranscription(e.target.value)}
         />
         <div className="buttons-container">
           <button 
             className="record-btn" 
             onClick={isRecording ? stopRecording : startRecording}
+            disabled={isLoading}
           >
-            {isRecording ? 'Detener grabación' : 'Iniciar grabación'}
+            {isRecording 
+              ? 'Detener grabación' 
+              : isLoading 
+                ? <FontAwesomeIcon icon={faSpinner} spin /> 
+                : 'Iniciar grabación'
+            }
           </button>
-          <button className="upload-btn" type="button" onClick={handleButtonClick}>
-            Subir audio
+          <button className="upload-btn" type="button" onClick={handleButtonClick} disabled={isLoadingAudio}>
+            {isLoadingAudio ? <FontAwesomeIcon icon={faSpinner} spin /> : 'Subir audio'}
           </button>
           <input
             type="file"
