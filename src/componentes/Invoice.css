@@ -4,26 +4,31 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 4px;
     color: #333;
     background-color: white; 
 }
 
 .invoice-title {
     font-size: 2.5rem;
-    margin-bottom: 20px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.invoice-date {
+    margin-bottom: 8px;
 }
 
 .invoice-info {
     width: 100%;
-    margin-bottom: 20px; 
+    margin-bottom: 8px; 
 }
 
 .info-input {
     width: 100%;
     height: 40px;
     padding: 10px;
-    margin-bottom: 15px; 
+    margin-bottom: 16px; 
     border: 1px solid #ccc; 
     border-radius: 5px; 
     color: #333; 
