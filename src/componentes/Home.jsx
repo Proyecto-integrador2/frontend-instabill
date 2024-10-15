@@ -17,15 +17,12 @@ import Swal from "sweetalert2";
 
 const Home = () => {
   const navigate = useNavigate(); // Inicializa useNavigate
-  const [transcription, setTranscription] = useState(
-    "Cliente: Natalia. Dirección: Calle Quinta. Teléfono: 3168234. Productos: Tres Papitas a 3000. Un Pase de Batalla de Valorant a 15000."
-  );
+  const [transcription, setTranscription] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [activeTab, setActiveTab] = useState("record");
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
-  const [invoiceStructure, setInvoiceStructure] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
 
@@ -144,7 +141,6 @@ const Home = () => {
           setIsProcessing(true);
           console.log("input GPT: ", transcription);
           const invoiceData = await getDataInvoice(transcription);
-          setInvoiceStructure(invoiceData);
 
           const date = new Date().toLocaleString("es-CO");
           setIsProcessing(false);
@@ -183,22 +179,22 @@ const Home = () => {
         ¿Qué deseas hacer?
       </p>
       <div className="w-full p-8 border rounded-md border-gray-300">
-        <div className="flex mb-4">
+        <div className="flex mb-4 space-x-2">
           <button
             onClick={() => setActiveTab("record")}
             className={`flex-1 py-2 px-4 text-center ${
-              activeTab === "record" ? "bg-blue-500 text-white" : "bg-gray-400"
+              activeTab === "record" ? "bg-white text-gray-900" : "bg-white text-gray-400"
             }`}
           >
-            Sección Audio
+            Nueva Factura
           </button>
           <button
             onClick={() => setActiveTab("bills")}
             className={`flex-1 py-2 px-4 text-center ${
-              activeTab === "bills" ? "bg-blue-500 text-white" : "bg-gray-400"
+              activeTab === "bills" ? "bg-white text-gray-900" : "bg-white text-gray-400"
             }`}
           >
-            Sección Facturas
+            Ver Facturas
           </button>
         </div>
         {activeTab === "record" && (
@@ -229,7 +225,7 @@ const Home = () => {
                   onClick={handleAudioUpload}
                   className="
                       px-4 py-2 rounded-md border text-white
-                      border-gray-300 flex items-center bg-fuchsia-500
+                      border-gray-300 flex items-center bg-blue-500
                     "
                 >
                   {isLoadingAudio ? (
@@ -266,7 +262,8 @@ const Home = () => {
                   className="textarea-field"
                   placeholder="Aquí aparecerá la transcripción del audio..."
                   value={transcription} // Muestra la transcripción
-                  disabled
+                  onChange={(e) => setTranscription(e.target.value)}
+                  style={{ marginLeft: '10px', width: '450px', height: '242px' }}
                 />
               </div>
             </div>
@@ -287,16 +284,6 @@ const Home = () => {
                     Generar Factura
                   </React.Fragment>
                 )}
-              </button>
-              <button
-                className="bg-green-500 text-white py-2 px-4 rounded-md flex items-center justify-center"
-                onClick={handleInvoiceList}
-                disabled={isProcessing}
-              >
-                <React.Fragment>
-                  <ReceiptText className="mr-2 h-4 w-4" />
-                  Ver Facturas
-                </React.Fragment>
               </button>
             </div>
           </div>
