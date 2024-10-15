@@ -220,7 +220,17 @@ const Home = () => {
                       border-gray-300 flex items-center bg-fuchsia-500
                     "
                 >
-                  <Upload className="mr-2 h-4 w-4" /> Subir Audio
+                  {isLoadingAudio ? (
+                    <React.Fragment>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Subiendo Audio...
+                    </React.Fragment>
+                  ) : (
+                    <React.Fragment>
+                      <Upload className="mr-2 h-4 w-4" />
+                      Subir Audio
+                    </React.Fragment>
+                  )}
                   <input
                     id="audioUpload"
                     type="file"
