@@ -9,13 +9,14 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 const Home = () => {
   const navigate = useNavigate(); // Inicializa useNavigate
-  const [transcription, setTranscription] = useState('esteban vive en la dirección calle 6 #6-18, número de celular 3017539955 compra 2 lapiceros marca kilometrico , también lleva 5 cuadernos marca norma cuadriculados a 8700 cada unidad, también un maletin que cuesta 50000, también lleva una regla a 1000, un kit de colores marca condor a 19000 y finalmente lleva 3 marcadores marca sharpie con un precio de 3000 por unidad.');
+  const [transcription, setTranscription] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const [invoiceStructure, setInvoiceStructure ] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
+  const [isLoadingInvoice, setIsLoadingInvoice] = useState(false);
 
   const handleInvoiceList = () => {
     navigate('/invoiceList'); // Redirige a la página de la factura
@@ -109,11 +110,13 @@ const Home = () => {
       }).then(async (result) => {
         if (result.isConfirmed) {
           // Si el usuario confirma, generar la factura
+          setIsLoadingInvoice(true)
           console.log("input GPT: ", transcription);
           const invoiceData = await getDataInvoice(transcription);
           setInvoiceStructure(invoiceData);
 
           const date = new Date().toLocaleString('es-CO');
+          setIsLoadingInvoice(false)
           navigate('/invoice', { state: { invoiceData, date: date } });
 
           Swal.fire('Factura Generada', 'Tu factura ha sido creada correctamente.', 'success');
@@ -136,12 +139,13 @@ const Home = () => {
       </section>
       {/* Segunda sección - Nueva Factura */}
       <section className="invoice-section">
-        <input 
+        <textarea
           type="text" 
           placeholder="Aquí aparecerá la transcripción del audio..." 
           className="input-field" 
           value={transcription} // Muestra la transcripción
           onChange={(e) => setTranscription(e.target.value)}
+          style={{ width: '393px', height: '242px' }}
         />
         <div className="buttons-container">
           <button 
@@ -172,7 +176,9 @@ const Home = () => {
 
       {/* Tercera sección - Historial de Facturas */}
       <section className="history-section">
-        <button className="generate-btn" onClick={handleGenerateRequestGPT}>Generar factura</button>
+        <button className="generate-btn" onClick={handleGenerateRequestGPT} disabled={isLoadingInvoice}>
+          {isLoadingInvoice ? <FontAwesomeIcon icon={faSpinner} spin /> : 'Generar factura'}
+        </button>
         <button className="history-btn" onClick={handleInvoiceList}>Ver facturas</button>
       </section>
     </div>
