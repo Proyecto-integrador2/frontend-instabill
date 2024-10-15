@@ -32,7 +32,7 @@ const InvoiceList = () => {
   ];
 
   const handleEditInvoice = (invoice) => {
-    // Aquí puedes agregar la lógica para editar la factura
+    
     console.log('Editar factura:', invoice);
   };
 

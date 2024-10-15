@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './Invoice.css'; 
 import { useLocation } from 'react-router-dom';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const Invoice = () => {
   const location = useLocation();
@@ -44,7 +46,31 @@ const Invoice = () => {
         }
     });
   };
-
+  //genera el pdf
+  const generatePDF = () => {
+    const invoiceElement = document.querySelector('.invoice-container');
+    html2canvas(invoiceElement).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgWidth = 210; // ancho de la página en mm (A4)
+      const pageHeight = 295; // alto de la página en mm (A4)
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+  
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+  
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      pdf.save('factura.pdf');
+    });
+  };
+  
   return (
     <div className="invoice-container">
       <h1 className="invoice-title">Factura Instabill</h1>
@@ -127,7 +153,11 @@ const Invoice = () => {
         placeholder="Información adicional..." 
       ></textarea>
       
-      <button className="generate-btn">Generar Factura</button>
+      <button className="generate-btn">Guardar Factura</button>
+      {/* Botón para generar el PDF */}
+    <button className="generate-btn" onClick={generatePDF}>
+      Generar PDF
+    </button>
     </div>
   );
 };
