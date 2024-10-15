@@ -56,7 +56,7 @@ const Home = () => {
         try {
           setIsLoading(true);
           const response = await axios.post(
-            "http://127.0.0.1:8000/speech-to-text/",
+            import.meta.env.VITE_URL_DOCKER  + "/speech-to-text/",
             formData,
             {
               headers: {
@@ -107,7 +107,7 @@ const Home = () => {
     try {
       setIsLoadingAudio(true);
       const response = await axios.post(
-        "http://127.0.0.1:8000/speech-to-text/",
+        import.meta.env.VITE_URL_DOCKER  + "/speech-to-text/",
         formData,
         {
           headers: {
