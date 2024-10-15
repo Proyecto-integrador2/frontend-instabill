@@ -14,8 +14,6 @@ import {
 } from "lucide-react";
 import InvoiceList from "./InvoiceList.jsx";
 import Swal from "sweetalert2";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 const Home = () => {
   const navigate = useNavigate(); // Inicializa useNavigate
@@ -28,7 +26,6 @@ const Home = () => {
   const [invoiceStructure, setInvoiceStructure] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
-  const [isLoadingInvoice, setIsLoadingInvoice] = useState(false);
 
   const handleInvoiceList = () => {
     navigate("/invoiceList"); // Redirige a la página de la factura
@@ -130,13 +127,13 @@ const Home = () => {
       }).then(async (result) => {
         if (result.isConfirmed) {
           // Si el usuario confirma, generar la factura
-          setIsLoadingInvoice(true);
+          setIsProcessing(true);
           console.log("input GPT: ", transcription);
           const invoiceData = await getDataInvoice(transcription);
           setInvoiceStructure(invoiceData);
 
           const date = new Date().toLocaleString("es-CO");
-          setIsLoadingInvoice(false);
+          setIsProcessing(false);
           navigate("/invoice", { state: { invoiceData, date: date } });
 
           Swal.fire(
