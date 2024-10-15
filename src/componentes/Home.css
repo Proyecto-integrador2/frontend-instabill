@@ -50,6 +50,19 @@ body {
     border: 1px solid #ccc; 
     border-radius: 5px; 
 }
+
+.textarea-field {
+    width: 90%; 
+    height: 112px;
+    padding: 8px;
+    text-align: justify;
+    font-size: 1rem; 
+    margin-right: 16px; 
+    background-color: white;
+    color: #333;
+    border: 2px solid #ccc; 
+    border-radius: 5px;
+}
   
 /* Contenedor de botones */
 .buttons-container {
@@ -95,7 +108,7 @@ body {
     text-align: center;
     display: flex; 
     flex-direction: row;
-    justify-content: center; /
+    justify-content: center;
 }
   
 /* Botón de ver facturas */

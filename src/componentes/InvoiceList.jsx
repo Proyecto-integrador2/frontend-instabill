@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import Invoice from './Invoice'; // Asegúrate de importar el componente Invoice
-import './InvoiceList.css'; 
+import React, { useState } from "react";
+import Invoice from "./Invoice"; // Asegúrate de importar el componente Invoice
+import "./InvoiceList.css";
 
 const InvoiceList = () => {
   const [invoices, setInvoices] = useState([]);
@@ -19,34 +19,48 @@ const InvoiceList = () => {
 
   const handleModalClick = (e) => {
     // Si el clic está en el contenedor del modal, cierra el modal
-    if (e.target.classList.contains('invoice-modal')) {
+    if (e.target.classList.contains("invoice-modal")) {
       handleCloseInvoice();
     }
   };
 
   // Ejemplo de facturas
   const exampleInvoices = [
-    { id: 1, customerName: 'Juan Pérez', customerAddress: 'Calle Ejemplo #123', totalAmount: '$56.00' },
-    { id: 2, customerName: 'María Gómez', customerAddress: 'Calle Ejemplo #456', totalAmount: '$30.00' },
-    { id: 3, customerName: 'Pedro Martínez', customerAddress: 'Calle Ejemplo #789', totalAmount: '$75.00' },
+    {
+      id: 1,
+      customerName: "Juan Pérez",
+      customerAddress: "Calle Ejemplo #123",
+      totalAmount: "$56.00",
+    },
+    {
+      id: 2,
+      customerName: "María Gómez",
+      customerAddress: "Calle Ejemplo #456",
+      totalAmount: "$30.00",
+    },
+    {
+      id: 3,
+      customerName: "Pedro Martínez",
+      customerAddress: "Calle Ejemplo #789",
+      totalAmount: "$75.00",
+    },
   ];
 
   const handleEditInvoice = (invoice) => {
-    
-    console.log('Editar factura:', invoice);
+    console.log("Editar Factura:", invoice);
   };
 
   return (
     <div className="invoice-list-container">
-      <h1>Lista de Facturas</h1>
+      <h1 className="invoice-list-title">Lista de Facturas</h1>
       <table className="invoice-list-table">
         <thead>
           <tr>
             <th>ID</th>
-            <th>Nombre Cliente</th>
+            <th>Name of Client</th>
             <th>Dirección</th>
             <th>Total</th>
-            <th>Acciones</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -58,7 +72,9 @@ const InvoiceList = () => {
               <td>{invoice.totalAmount}</td>
               <td>
                 <button onClick={() => handleViewInvoice(invoice)}>Ver</button>
-                <button onClick={() => handleEditInvoice(invoice)}>Editar</button>
+                <button onClick={() => handleEditInvoice(invoice)}>
+                  Editar
+                </button>
               </td>
             </tr>
           ))}
