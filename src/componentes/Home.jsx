@@ -45,6 +45,7 @@ const Home = () => {
       const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
       const formData = new FormData();
       formData.append("audio", audioBlob);
+      formData.append("audio", audioBlob);
 
       try {
         setIsLoading(true);
