@@ -3,6 +3,8 @@ import "./Invoice.css";
 import { useLocation } from "react-router-dom";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import Swal from "sweetalert2";
+import { postBill } from "../utils/bills";
 
 const Invoice = () => {
   const location = useLocation();
@@ -91,6 +93,95 @@ const Invoice = () => {
 
       // Descargar el PDF
       pdf.save("factura.pdf");
+    });
+  };
+
+  const handleSavePDF = async () => {
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¿Estás seguro que deseas guardar la factura?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, guardar factura",
+      cancelButtonText: "No, devolver",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        // Si el usuario confirma, guardar la factura
+        const invoiceElement = document.querySelector(".invoice-container");
+
+        // Ocultar los botones antes de generar el PDF
+        const buttons = document.querySelectorAll(".download-btn, .save-btn");
+        buttons.forEach((button) => (button.style.display = "none"));
+
+        html2canvas(invoiceElement).then(async (canvas) => {
+          const imgData = canvas.toDataURL("image/png");
+          const pdf = new jsPDF("portrait", "in", "letter");
+
+          const pageWidth = pdf.internal.pageSize.getWidth();
+          const pageHeight = pdf.internal.pageSize.getHeight();
+
+          const imgWidth = canvas.width; // Image original width
+          const imgHeight = canvas.height; // Image original height
+
+          // Scale image to fit in the PDF while maintaining aspect ratio
+          const ratio = imgWidth / imgHeight;
+          const pdfWidth = pageWidth * 0.9; // e.g., 90% of page width
+          const pdfHeight = pdfWidth / ratio; // Calculate height based on aspect ratio
+
+          // Calculate coordinates to center the image
+          const xOffset = (pageWidth - pdfWidth) / 2;
+          const yOffset = (pageHeight - pdfHeight) / 2;
+
+          pdf.addImage(imgData, "PNG", xOffset, yOffset, pdfWidth, pdfHeight);
+
+          // Mostrar los botones de nuevo después de generar el PDF
+          buttons.forEach((button) => (button.style.display = "block"));
+
+          // Convertir el PDF a Blob
+          const doc = pdf.output("blob");
+
+          // Crear un FormData para enviar el PDF
+          const formData = new FormData();
+          formData.append("file", doc, "bill.pdf");
+
+          // Enviar el PDF
+          try {
+            await postBill(formData)
+              .then(() => {
+                Swal.fire({
+                  title: "Factura Generada",
+                  text: "Tu factura ha sido guardada correctamente.",
+                  icon: "success",
+                });
+              })
+              .catch((error) => {
+                console.error(
+                  "Ocurrió un error al guardar la factura: ",
+                  error
+                );
+                Swal.fire({
+                  title: "Error al Guardar la Factura",
+                  text: "Ocurrió un error al guardar la factura. Vuelve a intentarlo.",
+                  icon: "error",
+                });
+              });
+          } catch (error) {
+            console.error("No se pudo enviar el PDF: ", error);
+            Swal.fire({
+              title: "Error al Enviar la Factura",
+              text: "Ocurrió un error al enviar la factura. Vuelve a intentarlo.",
+              icon: "error",
+            });
+          }
+        });
+      } else {
+        // Si el usuario decide no proceder
+        Swal.fire({
+          title: "Revisión",
+          text: "Puedes revisar la factura antes de guardarla.",
+          icon: "info",
+        });
+      }
     });
   };
 
@@ -194,10 +285,7 @@ const Invoice = () => {
         <button className="download-btn" onClick={generatePDF}>
           Descargar PDF
         </button>
-        <button
-          className="save-btn"
-          onClick={() => console.log("Guardar factura en la base de datos")}
-        >
+        <button className="save-btn" onClick={handleSavePDF}>
           Guardar Factura
         </button>
       </div>

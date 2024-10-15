@@ -17,7 +17,9 @@ import Swal from "sweetalert2";
 
 const Home = () => {
   const navigate = useNavigate(); // Inicializa useNavigate
-  const [transcription, setTranscription] = useState("");
+  const [transcription, setTranscription] = useState(
+    "Cliente: Natalia. Dirección: Calle Quinta. Teléfono: 3168234. Productos: Tres Papitas a 3000. Un Pase de Batalla de Valorant a 15000."
+  );
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [activeTab, setActiveTab] = useState("record");
@@ -45,8 +47,6 @@ const Home = () => {
       const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
       const formData = new FormData();
       formData.append("audio", audioBlob);
-      formData.append("audio", audioBlob);
-
       try {
         setIsLoading(true);
         const response = await axios.post(
