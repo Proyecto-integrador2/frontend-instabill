@@ -46,14 +46,19 @@ const Invoice = () => {
         }
     });
   };
-  //genera el pdf
+
   const generatePDF = () => {
     const invoiceElement = document.querySelector('.invoice-container');
+  
+    // Ocultar los botones antes de generar el PDF
+    const buttons = document.querySelectorAll('.download-btn, .save-btn');
+    buttons.forEach((button) => (button.style.display = 'none'));
+  
     html2canvas(invoiceElement).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgWidth = 210; // ancho de la página en mm (A4)
-      const pageHeight = 295; // alto de la página en mm (A4)
+      const imgWidth = 210;
+      const pageHeight = 295;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       let heightLeft = imgHeight;
       let position = 0;
@@ -67,9 +72,15 @@ const Invoice = () => {
         pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
         heightLeft -= pageHeight;
       }
+  
+      // Mostrar los botones de nuevo después de generar el PDF
+      buttons.forEach((button) => (button.style.display = 'block'));
+  
+      // Descargar el PDF
       pdf.save('factura.pdf');
     });
   };
+  
   
   return (
     <div className="invoice-container">
@@ -153,11 +164,16 @@ const Invoice = () => {
         placeholder="Información adicional..." 
       ></textarea>
       
-      <button className="generate-btn">Guardar Factura</button>
-      {/* Botón para generar el PDF */}
-    <button className="generate-btn" onClick={generatePDF}>
-      Generar PDF
+        {/* Botones */}
+    <button className="download-btn" onClick={generatePDF}>
+      Descargar PDF
     </button>
+    <button className="save-btn" onClick={() => console.log('Guardar factura en la base de datos')}>
+      Guardar Factura
+    </button>
+   
+
+
     </div>
   );
 };
