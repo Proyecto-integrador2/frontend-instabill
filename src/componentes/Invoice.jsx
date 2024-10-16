@@ -6,29 +6,41 @@ import html2canvas from "html2canvas";
 import Swal from "sweetalert2";
 import { postBill } from "../utils/bills";
 
-const Invoice = () => {
+const Invoice = ({ billData }) => {
   const location = useLocation();
-  // se obtienen los datos de la factura
+  // Se obtienen los datos de la factura
   const data = location.state?.invoiceData;
   const date = location.state?.date;
 
-  // se formatea a json el string con el json de la factura
-  const invoiceData = JSON.parse(data);
+  let invoiceData = null;
+
+  // Si hay data, se formatea a JSON el string con el JSON de la factura
+  if (data) {
+    invoiceData = JSON.parse(data);
+  }
+  // Si billData está definido y data no, entonces usar billData como información
+  else if (billData) {
+    invoiceData = billData;
+  }
+
+  // Revisar si tanto billData y Data están definidos para usar la información
+  else if (!billData && !data) {
+    return <p>No hay datos de la factura disponibles.</p>;
+  }
+
   const [editInvoice, setEditInvoice] = useState({
     ...invoiceData,
     total_compra: invoiceData.productos.reduce(
-      (sum, product) => sum + (product.precio_total || 0),
+      (sum, product) =>
+        parseFloat(sum) + (parseFloat(product.precio_total) || 0),
       0
     ),
     fecha_facturacion: date,
   });
 
-  // revisar si invoiceData está definida para usar la información
-  if (!data) {
-    return <p>No hay datos de la factura disponibles.</p>;
-  }
+  console.log(editInvoice);
 
-  // permite manejar los cambios hechos en la factura
+  // Permite manejar los cambios hechos en la factura
   const handleProductChange = (index, field, value) => {
     const updatedProducts = [...editInvoice.productos];
     updatedProducts[index][field] =
