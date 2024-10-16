@@ -14,3 +14,13 @@ export async function postBill(JSON) {
     throw error;
   }
 }
+
+export async function getBills() {
+  try {
+    const { data } = await axiosInstance.get(`/api/bills/`);
+    return data;
+  } catch (error) {
+    console.error("Error uploading bill: ", error);
+    throw error;
+  }
+}

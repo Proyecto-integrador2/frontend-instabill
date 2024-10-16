@@ -1,54 +1,92 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
+import { Eye, Edit } from "lucide-react";
 import Invoice from "./Invoice"; // Asegúrate de importar el componente Invoice
+import { getBills } from "../utils/bills";
 import "./InvoiceList.css";
 
 const InvoiceList = () => {
-  const [invoices, setInvoices] = useState([]);
-  const [selectedInvoice, setSelectedInvoice] = useState(null);
-  const [isViewingInvoice, setIsViewingInvoice] = useState(false);
+  const [bills, setBills] = useState([]);
+  const [selectedBill, setSelectedBill] = useState(null);
+  const [isViewingBill, setIsViewingBill] = useState(false);
 
-  const handleViewInvoice = (invoice) => {
-    setSelectedInvoice(invoice);
-    setIsViewingInvoice(true);
+  /**
+   * Función  que nos permite manejar la vista del
+   * componente de la factura
+   * @returns {Void}
+   */
+  const handleViewBill = (bill) => {
+    console.log("Ver Factura:", bill);
+    setSelectedBill(bill);
+    setIsViewingBill(true);
   };
 
-  const handleCloseInvoice = () => {
-    setIsViewingInvoice(false);
-    setSelectedInvoice(null);
+  /**
+   * Función  que nos permite manejar la edición de la
+   * vista de la factura
+   * @returns {Void}
+   */
+  const handleEditBill = (bill) => {
+    console.log("Editar Factura:", bill);
   };
 
+  /**
+   * Función  que nos permite manejar el cierre de la
+   * vista de la factura
+   * @returns {Void}
+   */
+  const handleCloseBill = () => {
+    setIsViewingBill(false);
+    setSelectedBill(null);
+  };
+
+  /**
+   * Función  que nos permite obtener abrir un contenedor modal
+   * para la vista de facturas
+   * @param {Event} e
+   * @returns {Void}
+   */
   const handleModalClick = (e) => {
     // Si el clic está en el contenedor del modal, cierra el modal
     if (e.target.classList.contains("invoice-modal")) {
-      handleCloseInvoice();
+      handleCloseBill();
     }
   };
 
-  // Ejemplo de facturas
-  const exampleInvoices = [
-    {
-      id: 1,
-      customerName: "Juan Pérez",
-      customerAddress: "Calle Ejemplo #123",
-      totalAmount: "$56.00",
-    },
-    {
-      id: 2,
-      customerName: "María Gómez",
-      customerAddress: "Calle Ejemplo #456",
-      totalAmount: "$30.00",
-    },
-    {
-      id: 3,
-      customerName: "Pedro Martínez",
-      customerAddress: "Calle Ejemplo #789",
-      totalAmount: "$75.00",
-    },
-  ];
-
-  const handleEditInvoice = (invoice) => {
-    console.log("Editar Factura:", invoice);
+  /**
+   * Función asincrónica que nos permite obtener la lista de
+   * facturas guardadas en el servidor y guardarla en el
+   * Local Storage.
+   * @returns {Void}
+   */
+  const fetchBillList = async () => {
+    const data = await getBills();
+    localStorage.setItem("bill_list", JSON.stringify(data));
+    setBills(data);
+    // console.log("Bills fetched", data);
   };
+
+  /**
+   * Función  que nos permite limpiar el Local Storage
+   * al cerrar o reiniciar la ventana.
+   * @returns {Void}
+   */
+  const clearLocalStorage = () => {
+    window.onbeforeunload = () => {
+      localStorage.clear();
+    };
+  };
+
+  useEffect(() => {
+    clearLocalStorage();
+
+    if (localStorage.getItem("bill_list")) {
+      const data = JSON.parse(localStorage.getItem("bill_list"));
+      setBills(data);
+      // console.log("Bills got from localStorage", data);
+    } else {
+      fetchBillList();
+    }
+  }, []);
 
   return (
     <div className="invoice-list-container">
@@ -57,33 +95,44 @@ const InvoiceList = () => {
         <thead>
           <tr>
             <th>ID</th>
-            <th>Name of Client</th>
+            <th>Nombre Cliente</th>
             <th>Dirección</th>
             <th>Total</th>
-            <th>Actions</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {exampleInvoices.map((invoice) => (
-            <tr key={invoice.id}>
-              <td>{invoice.id}</td>
-              <td>{invoice.customerName}</td>
-              <td>{invoice.customerAddress}</td>
-              <td>{invoice.totalAmount}</td>
+          {bills.map((bill) => (
+            <tr key={bill.id_factura}>
+              <td>{bill.id_factura}</td>
+              <td>{bill.cliente.nombre}</td>
+              <td>{bill.cliente.direccion}</td>
+              <td>${bill.total_compra}</td>
               <td>
-                <button onClick={() => handleViewInvoice(invoice)}>Ver</button>
-                <button onClick={() => handleEditInvoice(invoice)}>
-                  Editar
-                </button>
+                <div className="container-btn">
+                  <button
+                    className="view-bill-btn"
+                    onClick={() => handleViewBill(bill)}
+                  >
+                    <Eye className="mr-2" /> Ver
+                  </button>
+                  <button
+                    className="edit-bill-btn"
+                    onClick={() => handleEditBill(bill)}
+                  >
+                    <Edit className="mr-2" />
+                    Editar
+                  </button>
+                </div>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      {isViewingInvoice && (
-        <div className="invoice-modal" onClick={handleModalClick}>
-          <Invoice invoice={selectedInvoice} onClose={handleCloseInvoice} />
+      {isViewingBill && selectedBill && (
+        <div className="invoice-modal" onClick={(e) => handleModalClick(e)}>
+          <Invoice billData={selectedBill} onClose={handleCloseBill} />
         </div>
       )}
     </div>

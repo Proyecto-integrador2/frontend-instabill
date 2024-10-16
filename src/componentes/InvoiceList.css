@@ -19,13 +19,30 @@
 }
 
 .invoice-list-table th, .invoice-list-table td {
-    border: 1px solid #ccc;
+    border: 1px ridge #ccc;
     padding: 10px;
-    text-align: left;
+    text-align: center;
 }
 
 .invoice-list-table th {
     background-color: #007BFF;
+    color: white;
+}
+
+.container-btn {
+    display: flex;
+}
+
+.view-bill-btn {
+    display: flex;
+    background-color: #007BFF;
+    color: white;
+    margin-right: 8px;
+}
+
+.edit-bill-btn {
+    display: flex;
+    background-color: #f700ff;
     color: white;
 }
 
