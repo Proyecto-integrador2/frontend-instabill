@@ -216,8 +216,8 @@ const Home = () => {
                   onClick={isRecording ? stopRecording : startRecording}
                   className={`px-4 py-2 rounded-md flex items-center ${
                     isRecording
-                      ? "bg-red-500 text-white"
-                      : "bg-blue-500 text-white"
+                      ? "bg-green-500 text-white"
+                      : "bg-red-500 text-white"
                   }`}
                 >
                   {isRecording ? (
