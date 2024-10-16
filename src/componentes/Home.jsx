@@ -17,7 +17,7 @@ import Swal from "sweetalert2";
 
 const Home = () => {
   const navigate = useNavigate(); // Inicializa useNavigate
-  const [transcription, setTranscription] = useState('');
+  const [transcription, setTranscription] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [activeTab, setActiveTab] = useState("record");
@@ -26,7 +26,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
 
-  /** Redirige a la página de la lista de facturas. 
+  /** Redirige a la página de la lista de facturas.
    * */
   const handleInvoiceList = () => {
     navigate("/invoiceList");
@@ -40,20 +40,22 @@ const Home = () => {
       mediaRecorderRef.current = new MediaRecorder(stream);
       mediaRecorderRef.current.start();
       audioChunksRef.current = [];
-  
+
       mediaRecorderRef.current.ondataavailable = (event) => {
         audioChunksRef.current.push(event.data);
       };
-  
+
       mediaRecorderRef.current.onstop = async () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
+        const audioBlob = new Blob(audioChunksRef.current, {
+          type: "audio/wav",
+        });
         const formData = new FormData();
         formData.append("audio", audioBlob);
-  
+
         try {
           setIsLoading(true);
           const response = await axios.post(
-            import.meta.env.VITE_URL_DOCKER  + "/speech-to-text/",
+            import.meta.env.VITE_URL_DOCKER + "/speech-to-text/",
             formData,
             {
               headers: {
@@ -68,12 +70,12 @@ const Home = () => {
           setIsLoading(false);
         }
       };
-  
+
       setIsRecording(true);
     } catch (error) {
       console.error("Error al acceder al micrófono:", error);
     }
-  };  
+  };
 
   /** Detiene la grabación de audio y envía el archivo grabado a un endpoint de la API para convertirlo a texto.
    * */
@@ -104,7 +106,7 @@ const Home = () => {
     try {
       setIsLoadingAudio(true);
       const response = await axios.post(
-        import.meta.env.VITE_URL_DOCKER  + "/speech-to-text/",
+        import.meta.env.VITE_URL_DOCKER + "/speech-to-text/",
         formData,
         {
           headers: {
@@ -183,7 +185,9 @@ const Home = () => {
           <button
             onClick={() => setActiveTab("record")}
             className={`flex-1 py-2 px-4 text-center ${
-              activeTab === "record" ? "bg-white text-gray-900" : "bg-white text-gray-400"
+              activeTab === "record"
+                ? "bg-white text-gray-900"
+                : "bg-white text-gray-400"
             }`}
           >
             Nueva Factura
@@ -191,7 +195,9 @@ const Home = () => {
           <button
             onClick={() => setActiveTab("bills")}
             className={`flex-1 py-2 px-4 text-center ${
-              activeTab === "bills" ? "bg-white text-gray-900" : "bg-white text-gray-400"
+              activeTab === "bills"
+                ? "bg-white text-gray-900"
+                : "bg-white text-gray-400"
             }`}
           >
             Ver Facturas
@@ -223,10 +229,11 @@ const Home = () => {
                 </button>
                 <button
                   onClick={handleAudioUpload}
-                  className="
-                      px-4 py-2 rounded-md border text-white
-                      border-gray-300 flex items-center bg-blue-500
-                    "
+                  className={`px-4 py-2 rounded-md flex items-center ${
+                    isLoadingAudio
+                      ? "bg-pink-500 text-white"
+                      : "bg-blue-500 text-white"
+                  }`}
                 >
                   {isLoadingAudio ? (
                     <React.Fragment>
@@ -263,7 +270,11 @@ const Home = () => {
                   placeholder="Aquí aparecerá la transcripción del audio..."
                   value={transcription} // Muestra la transcripción
                   onChange={(e) => setTranscription(e.target.value)}
-                  style={{ marginLeft: '10px', width: '450px', height: '242px' }}
+                  style={{
+                    marginLeft: "10px",
+                    width: "450px",
+                    height: "242px",
+                  }}
                 />
               </div>
             </div>
