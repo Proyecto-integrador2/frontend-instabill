@@ -13,7 +13,9 @@ const Invoice = ({ billData }) => {
   // Se obtienen los datos de la factura
   const data = location.state?.invoiceData;
   const date = location.state?.date;
-
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const speechSynthesis = window.speechSynthesis;
+  const utterance = new SpeechSynthesisUtterance();
   let invoiceData = null;
 
   // Si hay data, se formatea a JSON el string con el JSON de la factura
@@ -72,13 +74,24 @@ const Invoice = ({ billData }) => {
     }
 };
 
-  const speak = (message) => {
-    const utterance = new SpeechSynthesisUtterance(message);
-    window.speechSynthesis.speak(utterance);
+const speak = (message) => {
+  utterance.text = message;
+  utterance.voice = speechSynthesis.getVoices().find(voice => voice.name === "Google US English"); // Cambia por la voz deseada
+  utterance.onend = () => setIsSpeaking(false);
+  speechSynthesis.speak(utterance);
+  setIsSpeaking(true);
+};
+
+  const stopSpeaking = () => {
+    speechSynthesis.cancel();
+    setIsSpeaking(false);
   };
 
   useEffect(() => {
     validateInvoice();
+    return () => {
+      stopSpeaking(); // Detener audio al salir de la página
+    };
   }, []);
 
   console.log(editInvoice);
@@ -331,6 +344,9 @@ const Invoice = ({ billData }) => {
         </button>
         <button className="save-btn" onClick={handleSavePDF}>
           Guardar Factura
+        </button>
+        <button className="stop-speech-btn" onClick={stopSpeaking} disabled={!isSpeaking}>
+          Detener Audio
         </button>
       </div>
     </div>

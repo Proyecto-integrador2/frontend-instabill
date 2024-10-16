@@ -148,3 +148,11 @@
     background-color: rgb(0, 128, 0);
     margin-left: 10px;
 }
+.stop-speech-btn {
+    color: white;
+    background-color:   #007BFF;  /* Color más oscuro al pasar el mouse */
+    margin-left: 10px;
+}
+.stop-speech-btn:hover {
+    background-color: #0056b3; /* Color más oscuro al pasar el mouse */
+}
