@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect  } from "react";
 import "./Invoice.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
@@ -39,6 +39,47 @@ const Invoice = ({ billData }) => {
     ),
     fecha_facturacion: date,
   });
+  const validateInvoice = () => {
+    const missingFields = [];
+
+    // Validar datos del cliente
+    if (!editInvoice.cliente.nombre) missingFields.push("Falta el Nombre del cliente");
+    if (!editInvoice.cliente.direccion) missingFields.push("Falta la Dirección del cliente");
+    if (!editInvoice.cliente.contacto) missingFields.push("Falta el Contacto del cliente");
+
+    // Validar productos
+    editInvoice.productos.forEach((product, index) => {
+        if (!product.nombre) {
+            missingFields.push(`Nombre del producto ${index + 1}`);
+        } else {
+            // Si el nombre del producto es conocido pero faltan otros datos
+            }if ((!product.cantidad || product.cantidad <= 0) & (!product.precio_unitario || product.precio_unitario <= 0)) {
+                missingFields.push(`Al producto ${product.nombre} le falta el precio unitario y la cantidad`);
+            }else if (!product.precio_unitario || product.precio_unitario <= 0) {
+              missingFields.push(`Al producto ${product.nombre} le falta el precio unitario`);
+            }else{
+              missingFields.push(`Al producto ${product.nombre} le falta la cantidad`);
+            }
+    });
+
+    // Generar el mensaje a pronunciar
+    if (missingFields.length > 0) {
+        const message = ` ${missingFields.join(", ")}. No te olvides de añadir esa informacion`;
+        speak(message);
+    } else {
+        const message = "La factura se ha generado correctamente. Revisa la información antes de guardar.";
+        speak(message);
+    }
+};
+
+  const speak = (message) => {
+    const utterance = new SpeechSynthesisUtterance(message);
+    window.speechSynthesis.speak(utterance);
+  };
+
+  useEffect(() => {
+    validateInvoice();
+  }, []);
 
   console.log(editInvoice);
 
