@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import "./Invoice.css";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import Swal from "sweetalert2";
 import { postBill } from "../utils/bills";
+import { ArrowLeftFromLine } from "lucide-react";
 
 const Invoice = ({ billData }) => {
+  const navigate = useNavigate(); 
   const location = useLocation();
   // Se obtienen los datos de la factura
   const data = location.state?.invoiceData;
@@ -72,6 +74,10 @@ const Invoice = ({ billData }) => {
     });
   };
 
+  const handleBack = () => {
+    navigate("/")
+  }
+
   const generatePDF = () => {
     Swal.fire({
       title: "¿Estás seguro?",
@@ -121,6 +127,7 @@ const Invoice = ({ billData }) => {
               text: "Tu factura ha sido guardada correctamente.",
               icon: "success",
             });
+            navigate("/");
           } catch (error) {
             console.error("No se pudo descargar la factura: ", error);
             Swal.fire({
@@ -275,6 +282,9 @@ const Invoice = ({ billData }) => {
 
       {/* Botones */}
       <div className="container-btn">
+        <button className="back-btn" onClick={handleBack}>
+          <ArrowLeftFromLine className="icon" />
+        </button>
         <button className="download-btn" onClick={generatePDF}>
           Descargar PDF
         </button>

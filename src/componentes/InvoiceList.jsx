@@ -116,20 +116,13 @@ const InvoiceList = () => {
                   >
                     <Eye className="mr-2" /> Ver
                   </button>
-                  <button
-                    className="edit-bill-btn"
-                    onClick={() => handleEditBill(bill)}
-                  >
-                    <Edit className="mr-2" />
-                    Editar
-                  </button>
+
                 </div>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-
       {isViewingBill && selectedBill && (
         <div className="invoice-modal" onClick={(e) => handleModalClick(e)}>
           <Invoice billData={selectedBill} onClose={handleCloseBill} />
