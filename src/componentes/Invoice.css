@@ -131,14 +131,20 @@
     display: flex;
 }
 
+.back-btn {
+    color: rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+    margin-right: 15px;
+}
+
 .download-btn {
     color: white;
     background-color: rgb(128, 0, 0);
-    margin-right: 16px;
+    margin-right: 10px;
 }
 
 .save-btn {
     color: white;
     background-color: rgb(0, 128, 0);
-    margin-left: 16px;
+    margin-left: 10px;
 }
